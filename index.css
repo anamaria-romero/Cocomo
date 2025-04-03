@@ -1,0 +1,88 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f0fc;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin-top: 8rem;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 900px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.project-info {
+    background-color: #d8b6ff;
+    color: #4a2c6b;
+}
+
+.project-app {
+    background-color: #f5c8e6;
+    color: #662d5c;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+input, select, button {
+    width: 90%;
+    margin: 8px 0;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+input, select {
+    background: #f0e6ff;
+    color: #4a2c6b;
+}
+
+button {
+    background-color: #b266b2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #914a91;
+}
+
+#results {
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+@media (min-width: 768px) {
+    .container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .card {
+        width: 45%;
+    }
+}
