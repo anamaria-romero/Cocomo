@@ -9,24 +9,25 @@
 <body>
 
     <div class="container">
-        <div class="card project-info">
-            <h2>Estimador de Esfuerzo con COCOMO 81</h2>
-            <p><strong>Integrantes:</strong> Ana Maria Romero Martinez y Luisa Fernanda Majin Castaño</p>
-            <p><strong>Fecha de entrega:</strong> 10 de abril de 2025</p>
-            <p><strong>Descripción:</strong> Aplicativo web para estimar el esfuerzo en proyectos de software usando el modelo intermedio de COCOMO 81.</p>
+        <div class="card project-info" id="presentation">
+            <h2>Estimador de Esfuerzo con COCOMO 81</h2> <br>
+            <p><strong>Integrantes:</strong> Ana Maria Romero Martinez y Luisa Fernanda Majin Castaño</p> <br>
+            <p><strong>Fecha de entrega:</strong> 10 de abril de 2025</p> <br>
+            <p><strong>Descripción:</strong> Aplicativo web para estimar el esfuerzo en proyectos de software usando el modelo intermedio de COCOMO 81.</p> <br>
+            <button id="showProject">VER PROYECTO</button>
         </div>
 
-        <div class="card project-app">
-            <h2>CALCULADORA COCOMO 81</h2>
+        <div class="card project-app" id="project" style="display: none;">
+            <h2>CALCULADORA COCOMO 81</h2> <br>
             <form id="cocomoForm">
-                <label for="kloc">Tamaño del proyecto (KLOC):</label>
-                <input type="number" id="kloc" step="0.01" min="0.1" required>
+                <label for="kloc">Tamaño del proyecto (en miles de líneas de código - KLOC):</label>
+                <input type="number" id="kloc" step="0.01" min="0.1" required placeholder="Ejemplo: 15">
 
-                <label for="factor">Factor de ajuste:</label>
-                <input type="number" id="factor" step="0.01" min="0.1" required>
+                <label for="factor">Factor de ajuste (según COCOMO 81):</label>
+                <input type="number" id="factor" step="0.01" min="0.1" required placeholder="Ejemplo: 1.2">
 
-                <label for="salary">Sueldo mensual por programador ($):</label>
-                <input type="number" id="salary" min="1" required>
+                <label for="salary">Sueldo mensual por programador (COP):</label>
+                <input type="number" id="salary" min="1" required placeholder="Ejemplo: 3'000.000">
 
                 <label for="mode">Modo de cálculo:</label>
                 <select id="mode">
@@ -34,8 +35,8 @@
                     <option value="duration">Ingresar duración deseada (meses)</option>
                 </select>
 
-                <label for="inputValue">Ingrese el valor según el modo:</label>
-                <input type="number" id="inputValue" min="1" required>
+                <label for="inputValue">Ingrese el valor según el modo seleccionado:</label>
+                <input type="number" id="inputValue" min="1" required placeholder="Ejemplo: 5">
 
                 <button type="submit">CALCULAR</button>
             </form>

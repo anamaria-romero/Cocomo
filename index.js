@@ -1,4 +1,9 @@
-document.getElementById("cocomoForm").addEventListener("submit", function(event) {
+document.getElementById("showProject").addEventListener("click", function() {
+    document.getElementById("presentation").style.display = "none"; 
+    document.getElementById("project").style.display = "block"; 
+});
+
+document.getElementById("cocomoForm").addEventListener("submit", function (event) {
     event.preventDefault();
 
     const kloc = parseFloat(document.getElementById("kloc").value);
@@ -36,6 +41,6 @@ document.getElementById("cocomoForm").addEventListener("submit", function(event)
         <p> <strong>Esfuerzo estimado:</strong> ${effort.toFixed(2)} persona-meses</p>
         <p> <strong>Duración:</strong> ${duration.toFixed(2)} meses</p>
         <p> <strong>Número de programadores:</strong> ${programmers.toFixed(2)}</p>
-        <p> <strong>Costo total estimado:</strong> $${totalCost.toFixed(2)}</p>
+        <p> <strong>Costo total estimado:</strong> ${new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(totalCost)}</p>
     `;
 });
