@@ -3,44 +3,49 @@ document.getElementById("showProject").addEventListener("click", function() {
     document.getElementById("project").style.display = "block"; 
 });
 
-document.getElementById("cocomoForm").addEventListener("submit", function (event) {
-    event.preventDefault();
-
+document.getElementById("cocomoForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+  
     const kloc = parseFloat(document.getElementById("kloc").value);
-    const factor = parseFloat(document.getElementById("factor").value);
+    const rely = parseFloat(document.getElementById("rely").value);
+    const aexp = parseFloat(document.getElementById("aexp").value);
+    const tool = parseFloat(document.getElementById("tool").value);
     const salary = parseFloat(document.getElementById("salary").value);
-    const mode = document.getElementById("mode").value;
-    const inputValue = parseFloat(document.getElementById("inputValue").value);
-
-    if (kloc <= 0 || factor <= 0 || salary <= 0 || inputValue <= 0) {
-        document.getElementById("results").innerText = "Todos los valores deben ser positivos y mayores a 0.";
-        return;
+    const devs = parseFloat(document.getElementById("devs").value);
+    const months = parseFloat(document.getElementById("months").value);
+  
+    const a = 2.4, b = 1.05, c = 2.5, d = 0.38;
+    const m = rely * aexp * tool;
+  
+    const E = a * Math.pow(kloc, b) * m;
+    const T = c * Math.pow(E, d);
+    const P = E / T;
+  
+    let costo = 0;
+    let años = Math.ceil(T / 12);
+    for (let i = 0; i < años; i++) {
+      const aumento = Math.pow(1.05, i);
+      const meses = i < años - 1 ? 12 : T % 12 || 12;
+      costo += P * salary * aumento * meses;
     }
-
-    const effort = 2.4 * Math.pow(kloc, 1.05) * factor;
-    let duration, programmers;
-
-    if (mode === "programmers") {
-        programmers = inputValue;
-        duration = effort / programmers;
-    } else {
-        duration = inputValue;
-        programmers = effort / duration;
-    }
-
-    let totalCost = 0;
-    let currentSalary = salary;
-    let months = Math.ceil(duration);
-
-    for (let i = 0; i < months; i++) {
-        if (i % 12 === 0 && i !== 0) currentSalary *= 1.05;
-        totalCost += programmers * currentSalary;
-    }
-
-    document.getElementById("results").innerHTML = `
-        <p> <strong>Esfuerzo estimado:</strong> ${effort.toFixed(2)} persona-meses</p>
-        <p> <strong>Duración:</strong> ${duration.toFixed(2)} meses</p>
-        <p> <strong>Número de programadores:</strong> ${programmers.toFixed(2)}</p>
-        <p> <strong>Costo total estimado:</strong> ${new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(totalCost)}</p>
+  
+    let interpretacion = `
+      <strong>Esfuerzo estimado:</strong> ${E.toFixed(2)} persona-meses<br/>
+      <strong>Duración estimada:</strong> ${T.toFixed(2)} meses<br/>
+      <strong>Personas necesarias:</strong> ${P.toFixed(2)}<br/>
+      <strong>Costo estimado:</strong> $${costo.toFixed(2)}<br/>
     `;
-});
+  
+    if (!isNaN(devs)) {
+      const tiempoConDevs = E / devs;
+      interpretacion += `<strong>Con ${devs} desarrolladores:</strong> ${tiempoConDevs.toFixed(2)} meses<br/>`;
+    }
+  
+    if (!isNaN(months)) {
+      const personasConTiempo = E / months;
+      interpretacion += `<strong>Para terminar en ${months} meses:</strong> se requieren ${personasConTiempo.toFixed(2)} personas<br/>`;
+    }
+  
+    document.getElementById("results").innerHTML = interpretacion;
+  });
+  
