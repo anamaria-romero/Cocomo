@@ -65,8 +65,24 @@ button:hover {
 
 #results {
     margin-top: 20px;
-    font-weight: bold;
 }
+
+#results ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  #results li {
+    margin-bottom: 6px;
+  }
+  
+  #results hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+  }
+  
+
 
 @media (min-width: 768px) {
     .container {

@@ -1,51 +1,118 @@
-document.getElementById("showProject").addEventListener("click", function() {
-    document.getElementById("presentation").style.display = "none"; 
-    document.getElementById("project").style.display = "block"; 
-});
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("cocomoForm");
+  const results = document.getElementById("results");
 
-document.getElementById("cocomoForm").addEventListener("submit", function(e) {
+  const effortResult = document.getElementById("effortResult");
+  const durationResult = document.getElementById("durationResult");
+  const teamSizeResult = document.getElementById("teamSizeResult");
+  const productivityResult = document.getElementById("productivityResult");
+  const salaryDisplay = document.getElementById("salaryDisplay");
+  const totalCostResult = document.getElementById("totalCostResult");
+
+  const effortInterpretation = document.getElementById("effortInterpretation");
+  const durationInterpretation = document.getElementById("durationInterpretation");
+  const teamSizeInterpretation = document.getElementById("teamSizeInterpretation");
+  const costInterpretation = document.getElementById("costInterpretation");
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      const parent = tab.closest(".tabs");
+      const activeTab = parent.querySelector(".tab.active");
+      const activePane = parent.querySelector(".tab-pane.active");
+      const newTab = tab.dataset.tab;
+      const newPane = parent.querySelector(`#${newTab}Tab`);
+
+      activeTab.classList.remove("active");
+      activePane.classList.remove("active");
+      tab.classList.add("active");
+      newPane.classList.add("active");
+
+      if (newTab === "teamSize") {
+        document.getElementById("duration").value = "";
+      } else {
+        document.getElementById("teamSize").value = "";
+      }
+    });
+  });
+
+  form.addEventListener("submit", function (e) {
     e.preventDefault();
-  
+
     const kloc = parseFloat(document.getElementById("kloc").value);
+    const teamSizeInput = document.getElementById("teamSize").value.trim();
+    const durationInput = document.getElementById("duration").value.trim();
+    const monthlySalary = parseFloat(document.getElementById("monthlySalary").value);
+
     const rely = parseFloat(document.getElementById("rely").value);
     const aexp = parseFloat(document.getElementById("aexp").value);
     const tool = parseFloat(document.getElementById("tool").value);
-    const salary = parseFloat(document.getElementById("salary").value);
-    const devs = parseFloat(document.getElementById("devs").value);
-    const months = parseFloat(document.getElementById("months").value);
-  
-    const a = 2.4, b = 1.05, c = 2.5, d = 0.38;
-    const m = rely * aexp * tool;
-  
-    const E = a * Math.pow(kloc, b) * m;
-    const T = c * Math.pow(E, d);
-    const P = E / T;
-  
-    let costo = 0;
-    let años = Math.ceil(T / 12);
-    for (let i = 0; i < años; i++) {
-      const aumento = Math.pow(1.05, i);
-      const meses = i < años - 1 ? 12 : T % 12 || 12;
-      costo += P * salary * aumento * meses;
+    const eaf = rely * aexp * tool;
+
+    const a = 2.4;
+    const b = 1.05;
+    const c = 2.5;
+    const d = 0.38;
+
+    const effort = a * Math.pow(kloc, b) * eaf;
+
+    let duration, teamSize;
+
+    if (teamSizeInput && durationInput) {
+      alert("Por favor, llena solo uno: tamaño de equipo o duración, no ambos.");
+      return;
     }
-  
-    let interpretacion = `
-      <strong>Esfuerzo estimado:</strong> ${E.toFixed(2)} persona-meses<br/>
-      <strong>Duración estimada:</strong> ${T.toFixed(2)} meses<br/>
-      <strong>Personas necesarias:</strong> ${P.toFixed(2)}<br/>
-      <strong>Costo estimado:</strong> $${costo.toFixed(2)}<br/>
-    `;
-  
-    if (!isNaN(devs)) {
-      const tiempoConDevs = E / devs;
-      interpretacion += `<strong>Con ${devs} desarrolladores:</strong> ${tiempoConDevs.toFixed(2)} meses<br/>`;
+
+    if (teamSizeInput) {
+      teamSize = parseFloat(teamSizeInput);
+      duration = effort / teamSize;
+    } else if (durationInput) {
+      duration = parseFloat(durationInput);
+      teamSize = effort / duration;
+    } else {
+      duration = c * Math.pow(effort, d);
+      teamSize = effort / duration;
     }
-  
-    if (!isNaN(months)) {
-      const personasConTiempo = E / months;
-      interpretacion += `<strong>Para terminar en ${months} meses:</strong> se requieren ${personasConTiempo.toFixed(2)} personas<br/>`;
+
+    const productivity = kloc / effort;
+
+    let totalCost = 0;
+    const yearlyCosts = [];
+    let remainingEffort = effort;
+    let currentYear = 1;
+    let monthlyCost = monthlySalary * teamSize;
+
+    while (remainingEffort > 0) {
+      let months = Math.min(12, remainingEffort / teamSize);
+      const yearlyCost = months * monthlyCost;
+      yearlyCosts.push({ year: currentYear, cost: yearlyCost });
+      totalCost += yearlyCost;
+      remainingEffort -= months * teamSize;
+      monthlyCost *= 1.05;
+      currentYear++;
     }
-  
-    document.getElementById("results").innerHTML = interpretacion;
+
+    effortResult.textContent = `${effort.toFixed(2)} persona-meses`;
+    durationResult.textContent = `${duration.toFixed(2)} meses`;
+    teamSizeResult.textContent = `${teamSize.toFixed(2)} personas`;
+    productivityResult.textContent = `${productivity.toFixed(2)} KLOC/persona-mes`;
+    salaryDisplay.textContent = `$${monthlySalary.toFixed(2)}`;
+    totalCostResult.textContent = `$${totalCost.toFixed(2)}`;
+
+    effortInterpretation.textContent = effort.toFixed(2);
+    durationInterpretation.textContent = duration.toFixed(2);
+    teamSizeInterpretation.textContent = teamSize.toFixed(2);
+    costInterpretation.textContent = `$${totalCost.toFixed(2)}`;
+
+    results.classList.remove("hidden");
+
+    const effortAnalysis = document.getElementById("effortAnalysis");
+    const costByYear = document.getElementById("costByYear");
+    effortAnalysis.innerHTML = yearlyCosts.map(y =>
+      `<div>Año ${y.year}: ${(y.cost / monthlySalary).toFixed(2)} persona-meses</div>`
+    ).join("");
+
+    costByYear.innerHTML = yearlyCosts.map(y =>
+      `<div>Año ${y.year}: $${y.cost.toFixed(2)}</div>`
+    ).join("");
   });
-  
+});

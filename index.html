@@ -2,66 +2,103 @@
 <html lang="es">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estimador COCOMO 81</title>
-    <link rel="stylesheet" href="index.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estimador COCOMO 81</title>
+  <link rel="stylesheet" href="index.css" />
 </head>
 
 <body>
+  <div class="container">
+    <div class="card project-info" id="presentation">
+      <h2>Estimador de Esfuerzo con COCOMO 81</h2><br />
+      <p><strong>Integrantes:</strong> Ana Maria Romero Martinez y Luisa Fernanda Majin Castaño</p><br />
+      <p><strong>Fecha de entrega:</strong> 10 de abril de 2025</p><br />
+      <p><strong>Descripción:</strong> Este aplicativo web permite estimar el esfuerzo, tiempo, personal requerido y 
+        costo total de desarrollo de un proyecto de software, utilizando el modelo intermedio de COCOMO 81 en su modalidad
+        orgánica. <br> El usuario puede ingresar el tamaño del proyecto en KLOC, ajustar factores como fiabilidad, 
+        experiencia y herramientas utilizadas, además de simular escenarios con diferente número de programadores o 
+        duración deseada. <br> También se calcula automáticamente el costo teniendo en cuenta aumentos salariales anuales. 
+        La interfaz es interactiva, responsiva y diseñada para facilitar la toma de decisiones en la planificación de 
+        proyectos.</p>
+  <br />
+      <button id="showProject">VER PROYECTO</button>
+    </div>
 
-    <div class="container">
-        <div class="card project-info" id="presentation">
-            <h2>Estimador de Esfuerzo con COCOMO 81</h2> <br>
-            <p><strong>Integrantes:</strong> Ana Maria Romero Martinez y Luisa Fernanda Majin Castaño</p> <br>
-            <p><strong>Fecha de entrega:</strong> 10 de abril de 2025</p> <br>
-            <p><strong>Descripción:</strong> Aplicativo web para estimar el esfuerzo en proyectos de software usando el
-                modelo intermedio de COCOMO 81.</p> <br>
-            <button id="showProject">VER PROYECTO</button>
-        </div>
+    <div class="card project-app" id="project" style="display: none;">
+      <h2>Estimador COCOMO 81 (Intermedio)</h2><br />
+      <form id="cocomoForm">
+        <label for="kloc">Tamaño del proyecto (KLOC):</label>
+        <input type="number" id="kloc" required min="1" step="0.1" />
 
-        <div class="card project-app" id="project" style="display: none;">
-            <h2>Estimador COCOMO 81 (Intermedio)</h2> <br>
-            <form id="cocomoForm">
-                <label for="kloc">Tamaño del proyecto (KLOC):</label>
-                <input type="number" id="kloc" required min="1" step="0.1" />
+        <label for="rely">Fiabilidad (RELY):</label>
+        <select id="rely">
+          <option value="0.75">Muy Bajo (0.75)</option>
+          <option value="0.88">Bajo (0.88)</option>
+          <option value="1.00">Nominal (1.00)</option>
+          <option value="1.15">Alto (1.15)</option>
+          <option value="1.40">Muy Alto (1.40)</option>
+        </select>
 
-                <label for="rely">Fiabilidad (RELY):</label>
-                <select id="rely">
-                    <option value="1">Bajo (1.00)</option>
-                    <option value="1.05">Nominal (1.05)</option>
-                    <option value="1.15">Alto (1.15)</option>
-                </select>
+        <label for="aexp">Experiencia en la aplicación (AEXP):</label>
+        <select id="aexp">
+          <option value="1.22">Muy Bajo (1.22)</option>
+          <option value="1.13">Bajo (1.13)</option>
+          <option value="1.00">Nominal (1.00)</option>
+          <option value="0.90">Alto (0.90)</option>
+          <option value="0.85">Muy Alto (0.85)</option>
+        </select>
 
-                <label for="aexp">Experiencia en la aplicación (AEXP):</label>
-                <select id="aexp">
-                    <option value="1.22">Muy Bajo (1.22)</option>
-                    <option value="1.13">Bajo (1.13)</option>
-                    <option value="1">Nominal (1.00)</option>
-                </select>
+        <label for="tool">Herramientas de software (TOOL):</label>
+        <select id="tool">
+          <option value="1.17">Muy Bajo (1.17)</option>
+          <option value="1.10">Bajo (1.10)</option>
+          <option value="1.00">Nominal (1.00)</option>
+          <option value="0.90">Alto (0.90)</option>
+          <option value="0.78">Muy Alto (0.78)</option>
+        </select>
 
-                <label for="tool">Herramientas de software (TOOL):</label>
-                <select id="tool">
-                    <option value="1.10">Bajo (1.10)</option>
-                    <option value="1.00">Nominal (1.00)</option>
-                </select>
+        <label for="monthlySalary">Sueldo mensual por programador ($):</label>
+        <input type="number" id="monthlySalary" required min="1" step="any" />
 
-                <label for="salary">Sueldo mensual por programador ($):</label>
-                <input type="number" id="salary" required min="1" step="100" />
+        <label for="teamSize">Número de desarrolladores (opcional):</label>
+        <input type="number" id="teamSize" min="1" />
 
-                <label for="devs">Número de desarrolladores (opcional):</label>
-                <input type="number" id="devs" min="1" />
+        <label for="duration">Duración deseada (meses, opcional):</label>
+        <input type="number" id="duration" min="1" />
 
-                <label for="months">Duración deseada (meses, opcional):</label>
-                <input type="number" id="months" min="1" />
+        <button type="submit">Calcular</button>
+      </form>
 
-                <button type="submit">Calcular</button>
-            </form>
+      <div id="results" class="hidden">
+        <h3>Resultados Generales</h3>
+        <ul>
+          <li><strong>Esfuerzo estimado:</strong> <span id="effortResult"></span></li>
+          <li><strong>Duración estimada:</strong> <span id="durationResult"></span></li>
+          <li><strong>Personas necesarias:</strong> <span id="teamSizeResult"></span></li>
+          <li><strong>Productividad:</strong> <span id="productivityResult"></span></li>
+          <li><strong>Sueldo base:</strong> <span id="salaryDisplay"></span></li>
+          <li><strong>Costo total estimado:</strong> <span id="totalCostResult"></span></li>
+        </ul>
 
-            <div id="results"></div>
-        </div>
+        <hr>
 
-        <script src="index.js"></script>
+        <h4>Distribución de esfuerzo por año</h4>
+        <div id="effortAnalysis"></div>
+
+        <h4>Costo acumulado por año</h4>
+        <div id="costByYear"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("showProject").addEventListener("click", function () {
+      document.getElementById("presentation").style.display = "none";
+      document.getElementById("project").style.display = "block";
+    });
+  </script>
+  <script src="index.js"></script>
 </body>
 
 </html>
