@@ -38,7 +38,9 @@ form {
     align-items: center;
 }
 
-input, select, button {
+input,
+select,
+button {
     width: 90%;
     margin: 8px 0;
     padding: 10px;
@@ -47,7 +49,8 @@ input, select, button {
     font-size: 16px;
 }
 
-input, select {
+input,
+select {
     background: #f0e6ff;
     color: #4a2c6b;
 }
@@ -70,18 +73,26 @@ button:hover {
 #results ul {
     list-style-type: none;
     padding-left: 0;
-  }
-  
-  #results li {
+}
+
+#results li {
     margin-bottom: 6px;
-  }
-  
-  #results hr {
+}
+
+#results hr {
     margin: 20px 0;
     border: none;
     border-top: 1px solid #ccc;
-  }
-  
+}
+
+#effortAnalysis div,
+#costByYear div {
+    margin-bottom: 6px;
+    padding-left: 10px;
+    font-style: italic;
+}
+
+
 
 
 @media (min-width: 768px) {

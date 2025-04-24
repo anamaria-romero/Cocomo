@@ -9,32 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const salaryDisplay = document.getElementById("salaryDisplay");
   const totalCostResult = document.getElementById("totalCostResult");
 
-  const effortInterpretation = document.getElementById("effortInterpretation");
-  const durationInterpretation = document.getElementById("durationInterpretation");
-  const teamSizeInterpretation = document.getElementById("teamSizeInterpretation");
-  const costInterpretation = document.getElementById("costInterpretation");
-
-  document.querySelectorAll(".tab").forEach(tab => {
-    tab.addEventListener("click", () => {
-      const parent = tab.closest(".tabs");
-      const activeTab = parent.querySelector(".tab.active");
-      const activePane = parent.querySelector(".tab-pane.active");
-      const newTab = tab.dataset.tab;
-      const newPane = parent.querySelector(`#${newTab}Tab`);
-
-      activeTab.classList.remove("active");
-      activePane.classList.remove("active");
-      tab.classList.add("active");
-      newPane.classList.add("active");
-
-      if (newTab === "teamSize") {
-        document.getElementById("duration").value = "";
-      } else {
-        document.getElementById("teamSize").value = "";
-      }
-    });
-  });
-
   form.addEventListener("submit", function (e) {
     e.preventDefault();
 
@@ -43,10 +17,19 @@ document.addEventListener("DOMContentLoaded", function () {
     const durationInput = document.getElementById("duration").value.trim();
     const monthlySalary = parseFloat(document.getElementById("monthlySalary").value);
 
-    const rely = parseFloat(document.getElementById("rely").value);
-    const aexp = parseFloat(document.getElementById("aexp").value);
-    const tool = parseFloat(document.getElementById("tool").value);
-    const eaf = rely * aexp * tool;
+    const factors = [
+      "rely", "data", "cplx", "time", "stor", "virt", "turn",
+      "acap", "aexp", "pcap", "vexp", "lexp", "modp", "tool", "sced"
+    ];
+    let eaf = 1;
+
+    factors.forEach(id => {
+      const value = parseFloat(document.getElementById(id).value);
+      if (!isNaN(value)) {
+        eaf *= value;
+      }
+    });
+    
 
     const a = 2.4;
     const b = 1.05;
@@ -97,11 +80,6 @@ document.addEventListener("DOMContentLoaded", function () {
     productivityResult.textContent = `${productivity.toFixed(2)} KLOC/persona-mes`;
     salaryDisplay.textContent = `$${monthlySalary.toFixed(2)}`;
     totalCostResult.textContent = `$${totalCost.toFixed(2)}`;
-
-    effortInterpretation.textContent = effort.toFixed(2);
-    durationInterpretation.textContent = duration.toFixed(2);
-    teamSizeInterpretation.textContent = teamSize.toFixed(2);
-    costInterpretation.textContent = `$${totalCost.toFixed(2)}`;
 
     results.classList.remove("hidden");
 
